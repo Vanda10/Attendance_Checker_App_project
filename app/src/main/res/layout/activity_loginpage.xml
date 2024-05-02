@@ -38,17 +38,33 @@
         app:boxStrokeWidth="2dp">
 
 
-        <com.google.android.material.textfield.TextInputEditText
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Student Email"
-            android:textStyle="bold"
-            android:textColorHint="@color/dark_red" />
+            android:layout_height="wrap_content">
 
+            <!-- Search Field -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Student Email"
+                android:textStyle="bold"
+                android:textColorHint="@color/dark_red" />
 
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_below="@id/searchEditText"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
+
+        </RelativeLayout>
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,12 +74,26 @@
         app:boxStrokeWidth="2dp">
 
 
-        <com.google.android.material.textfield.TextInputEditText
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Password"
-            android:textStyle="bold"
-            android:textColorHint="@color/dark_red" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Password"
+                android:textStyle="bold"
+                android:textColorHint="@color/dark_red" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_below="@id/searchEditText"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
+
+        </LinearLayout>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,7 +113,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="login"
-            android:backgroundTint="@color/dark_red"
+            android:backgroundTint="@color/dark_red">
+
+        </Button>
     </LinearLayout>
 
 
