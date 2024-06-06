@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Attendence checker</string>
+
+    <string name="home">Home</string>
+    <string name="account">Account</string>
+    <string name="mysports">My Sports</string>
+    <string name="profile">Profile</string>
+    <string name="scan">Scan</string>
+
+    <string name="home_fragment">Home Fragment</string>
+    <string name="scan_fragment">Scan Fragment</string>
+    <string name="profile_fragment">Profile Fragment</string>
+
 </resources>

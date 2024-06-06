@@ -6,46 +6,39 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.zxing.integration.android.IntentIntegrator
 import kh.edu.rupp.fe.dse.attendencechecker.R
-
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_homepage)
 
-        // Find the "Start" card view
-        val startCardView: CardView = findViewById(R.id.startCardView)
+    private lateinit var appBarConfiguration:
+            AppBarConfiguration
 
-        // Set OnClickListener for the "Start" card view
-        startCardView.setOnClickListener {
-            // Start the ScanActivity
-            startActivity(Intent(this@MainActivity, QRScanActivity::class.java))
-        }
+    override fun onCreate(savedInstanceState: Bundle?) { super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        // Method to start QR code scanning
-        fun startScanQRCode(view: View) {
-            // Create an IntentIntegrator to initiate QR code scanning
-            val integrator = IntentIntegrator(this)
-            // Customize the prompt message if needed
-            integrator.setPrompt("Scan a QR Code")
-            // Start the scanning process
-            integrator.initiateScan()
-        }
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as
+                NavHostFragment
+        val navController = navHostFragment.navController
 
-        // Override onActivityResult to handle the result of QR code scanning
-        fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(requestCode, resultCode, data)
+        appBarConfiguration = AppBarConfiguration(setOf( R.id.nav_home, R.id.nav_scan, R.id.nav_profile))
+        setupActionBarWithNavController(navController,
+            appBarConfiguration)
+        findViewById<BottomNavigationView>(R.id.nav_view)
+            ?.setupWithNavController(navController)
+    }
 
-            // Check if the result is from QR code scanning
-            if (requestCode == IntentIntegrator.REQUEST_CODE && resultCode == RESULT_OK) {
-                // Retrieve the scanned content
-                val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-                if (result != null && result.contents != null) {
-                    // Handle the scanned content here (e.g., display it in a toast)
-                    Toast.makeText(this, "Scanned QR Code: ${result.contents}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        val navController
+                = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:background="@color/white"
         android:layout_marginStart="20dp"
@@ -34,9 +35,9 @@
                 android:layout_marginLeft="15dp">
 
                 <TextView
+                    android:id="@+id/subject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Data Engineer"
                     android:layout_marginTop="10dp"
                     android:textSize="20dp"
                     android:textStyle="bold"/>
