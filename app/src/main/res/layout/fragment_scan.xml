@@ -8,13 +8,10 @@
     tools:context=".MainActivity">
 
     <!-- TextView for the title "Scan qr screen" -->
-
-    <!-- BarcodeView for scanning QR codes -->
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
         android:text="Scan QR code"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -24,8 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <!-- TextView for the instruction "To check Attendance" -->
-
+    <!-- BarcodeView for scanning QR codes -->
     <com.journeyapps.barcodescanner.BarcodeView
         android:id="@+id/barcode_view"
         android:layout_width="250dp"
@@ -38,6 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_text" />
 
+    <!-- TextView for the instruction "To check Attendance" -->
     <TextView
         android:id="@+id/attendance_text"
         android:layout_width="wrap_content"
@@ -51,5 +48,45 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="0dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- TextView for displaying attendance status -->
+    <TextView
+        android:id="@+id/attendance_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:background="@android:color/white"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/attendance_text" />
 
+    <!-- ProgressBar for loading animation -->
+    <ProgressBar
+        android:id="@+id/loading_spinner"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- ImageView for loading the QR code image -->
+    <ImageView
+        android:id="@+id/qr_code_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

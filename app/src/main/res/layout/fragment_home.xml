@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="650dp"
+    android:layout_height="670dp"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -15,18 +15,9 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/recentlyCheckedInTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Recently Checked In"
-            android:textStyle="bold"
-            android:layout_marginStart="10dp"/>
-
-        <TextView
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
             android:text="Wednesday 27 April 2024"
             android:textStyle="bold"/>
@@ -103,7 +94,8 @@
                         android:layout_marginTop="5dp"
                         android:text="On Time"
                         android:textColor="@color/dark_red"
-                        android:textSize="15dp"/>
+                        android:textSize="15dp"
+                        tools:ignore="TextSizeCheck" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
