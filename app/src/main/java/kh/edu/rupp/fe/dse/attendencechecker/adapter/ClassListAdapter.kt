@@ -1,3 +1,4 @@
+// ClassListAdapter.kt
 package kh.edu.rupp.fe.dse.attendencechecker.adapter
 
 import android.view.LayoutInflater
@@ -8,34 +9,30 @@ import androidx.recyclerview.widget.RecyclerView
 import kh.edu.rupp.fe.dse.attendencechecker.R
 import kh.edu.rupp.fe.dse.attendencechecker.model.ClassUiModel
 
-class ClassListAdapter(private var sessionList: List<ClassUiModel>) : RecyclerView.Adapter<ClassListAdapter.SessionViewHolder>() {
+class ClassListAdapter(private var classList: List<ClassUiModel>) : RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessionViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_checked_in, parent, false)
-        return SessionViewHolder(view)
+    inner class ClassViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val sessionNameTextView: TextView = itemView.findViewById(R.id.subject)
+        val sessionDateTextView: TextView = itemView.findViewById(R.id.date)
+        val sessionStartTimeTextView: TextView = itemView.findViewById(R.id.time)
     }
 
-    override fun onBindViewHolder(holder: SessionViewHolder, position: Int) {
-        holder.bind(sessionList[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_checked_in, parent, false)
+        return ClassViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int = sessionList.size
+    override fun onBindViewHolder(holder: ClassViewHolder, position: Int) {
+        val classItem = classList[position]
+        holder.sessionNameTextView.text = classItem.session_name
+        holder.sessionDateTextView.text = classItem.session_date
+        holder.sessionStartTimeTextView.text = classItem.session_start_time
+    }
 
-    fun updateSessionList(newClassList: List<ClassUiModel>) {
-        sessionList = newClassList
+    override fun getItemCount() = classList.size
+
+    fun updateClassList(newClassList: List<ClassUiModel>) {
+        classList = newClassList
         notifyDataSetChanged()
-    }
-
-    class SessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val sessionNameView: TextView = itemView.findViewById(R.id.subject)
-        private val sessionDateView: TextView = itemView.findViewById(R.id.date)
-        private val sessionStartTimeView: TextView = itemView.findViewById(R.id.time)
-
-
-        fun bind(classUiModel: ClassUiModel) {
-            sessionNameView.text = classUiModel.session_name
-            sessionDateView.text = classUiModel.session_date
-            sessionStartTimeView.text = classUiModel.session_start_time
-        }
     }
 }

@@ -1,6 +1,7 @@
 package kh.edu.rupp.fe.dse.attendencechecker.fragment
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,8 +25,6 @@ import kh.edu.rupp.fe.dse.attendencechecker.model.AttendanceRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ScanFragment : Fragment() {
     private lateinit var barcodeView: BarcodeView
@@ -38,7 +37,6 @@ class ScanFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_scan, container, false)
         barcodeView = view.findViewById(R.id.barcode_view)
         attendanceStatus = view.findViewById(R.id.attendance_status)
@@ -62,28 +60,36 @@ class ScanFragment : Fragment() {
 
     private val callback = object : BarcodeCallback {
         override fun barcodeResult(result: BarcodeResult) {
-            // Handle the scanned result here
             println("Scanned: ${result.text}")
             Toast.makeText(requireContext(), "QR code scanned", Toast.LENGTH_SHORT).show()
 
-            // Stop scanning and show loading animation
             barcodeView.pause()
             loadingSpinner.visibility = View.VISIBLE
 
             val sessionUrl = result.text.replace("127.0.0.1", "10.0.2.2")
             val sessionId = extractSessionIdFromUrl(sessionUrl)
             if (sessionId != null) {
-                // Load the QR code image
                 qrCodeImage.visibility = View.VISIBLE
                 Picasso.get().load(result.text).into(qrCodeImage)
 
-                // Send attendance data
-                sendAttendanceData(userId = 1, sessionId = sessionId) // Replace with actual user ID
+                val userId = getUserIdFromSharedPreferences()
+                val userIdInt = userId?.toIntOrNull()
+
+                if (userIdInt != null) {
+                    sendAttendanceData(userIdInt, sessionId)
+                } else {
+                    loadingSpinner.visibility = View.GONE
+                    attendanceStatus.text = "Invalid user ID"
+                    attendanceStatus.visibility = View.VISIBLE
+                }
+            } else {
+                loadingSpinner.visibility = View.GONE
+                attendanceStatus.text = "Invalid session ID"
+                attendanceStatus.visibility = View.VISIBLE
             }
         }
 
         override fun possibleResultPoints(resultPoints: List<ResultPoint>) {
-            // Handle possible result points if needed
         }
     }
 
@@ -95,6 +101,46 @@ class ScanFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         barcodeView.pause()
+    }
+
+    private fun getUserIdFromSharedPreferences(): String? {
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("user_id", null)
+    }
+
+    private fun sendAttendanceData(userId: Int, sessionId: Int) {
+        val attendanceRequest = AttendanceRequest(user_id = userId, session_id = sessionId)
+        val call = RetrofitClient.apiService.createAttendance(attendanceRequest)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                loadingSpinner.visibility = View.GONE
+                when {
+                    response.isSuccessful -> {
+                        println("Attendance recorded successfully")
+                        attendanceStatus.text = "Attendance recorded successfully"
+                    }
+                    response.code() == 400 -> {
+                        println("Attendance already recorded for this session and user.")
+                        attendanceStatus.text = "Attendance already recorded for this session and user."
+                    }
+                    else -> {
+                        println("Failed to record attendance")
+                        attendanceStatus.text = "Failed to record attendance"
+                        val errorBody = response.errorBody()?.string()
+                        println("Error: $errorBody")
+                    }
+                }
+                attendanceStatus.visibility = View.VISIBLE
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                loadingSpinner.visibility = View.GONE
+                println("Error: ${t.message}")
+                attendanceStatus.text = "Error: ${t.message}"
+                attendanceStatus.visibility = View.VISIBLE
+            }
+        })
     }
 
     companion object {
@@ -109,39 +155,8 @@ class ScanFragment : Fragment() {
                 }
             }
 
-        // Extract session ID from the scanned URL
         fun extractSessionIdFromUrl(url: String): Int? {
             return url.split("/").lastOrNull()?.toIntOrNull()
         }
     }
-
-    private fun sendAttendanceData(userId: Int, sessionId: Int) {
-        val attendanceRequest = AttendanceRequest(user_id = userId, session_id = sessionId)
-        val call = RetrofitClient.apiService.createAttendance(attendanceRequest)
-
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                loadingSpinner.visibility = View.GONE
-                if (response.isSuccessful) {
-                    println("Attendance recorded successfully")
-                    attendanceStatus.text = "Attendance recorded successfully"
-                } else {
-                    println("Failed to record attendance")
-                    attendanceStatus.text = "Failed to record attendance"
-                    // Log the response error
-                    val errorBody = response.errorBody()?.string()
-                    println("Error: $errorBody")
-                }
-                attendanceStatus.visibility = View.VISIBLE
-            }
-
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                loadingSpinner.visibility = View.GONE
-                println("Error: ${t.message}")
-                attendanceStatus.text = "Error: ${t.message}"
-                attendanceStatus.visibility = View.VISIBLE
-            }
-        })
-    }
 }
-

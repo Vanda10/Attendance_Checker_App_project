@@ -10,5 +10,6 @@
     <string name="home_fragment">Home Fragment</string>
     <string name="scan_fragment">Scan Fragment</string>
     <string name="profile_fragment">Profile Fragment</string>
+    <string name="hello_student">Hello Student !</string>
 
 </resources>

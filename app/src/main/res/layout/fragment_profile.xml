@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".fragment.ProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,42 +27,31 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="32dp"/>
+                android:layout_marginTop="32dp"
+                android:src="@drawable/ic_profile_foreground"/>
 
             <!-- Name EditText -->
             <EditText
                 android:id="@+id/profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loeurm Vanda"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:enabled="false"
                 android:layout_gravity="center"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
-            <!-- Job Title Text -->
+            <!-- Major Text -->
             <TextView
-                android:id="@+id/profile_title"
+                android:id="@+id/student_department1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Data Science and Engineering"
                 android:textSize="16sp"
                 android:textColor="@android:color/darker_gray"
                 android:layout_gravity="center"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="4dp" />
 
-            <!-- Edit Profile Button -->
-            <Button
-                android:id="@+id/btn_edit_profile"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:text="Edit Profile"
-                android:backgroundTint="@color/dark_red"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"/>
 
             <!-- Date of Birth -->
             <LinearLayout
@@ -78,16 +68,17 @@
                     android:text="Date of Birth: "
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" />
+
                 <EditText
                     android:id="@+id/profile_dob"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="22/03/2004"
-                    android:textSize="16sp"
                     android:enabled="false"
-                    android:textColor="@android:color/black"/>
+                    android:minHeight="48dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <!-- Department Text -->
@@ -104,14 +95,14 @@
                     android:text="Department: "
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" />
                 <TextView
+                    android:id="@+id/student_department"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Data Science and Engineering"
+                    android:layout_marginStart="22dp"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/darker_gray" />
             </LinearLayout>
 
             <!-- Class Text -->
@@ -128,14 +119,15 @@
                     android:text="Class: "
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
+
                 <TextView
+                    android:id="@+id/class_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="M03"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
+                    android:layout_marginStart="70dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <!-- Log Out Button -->
@@ -147,10 +139,10 @@
                 android:backgroundTint="@color/dark_red"
                 android:text="Log Out"
                 android:textColor="@android:color/white"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
             <View
                 android:layout_width="match_parent"
-                android:layout_height="90dp"/>
+                android:layout_height="90dp" />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

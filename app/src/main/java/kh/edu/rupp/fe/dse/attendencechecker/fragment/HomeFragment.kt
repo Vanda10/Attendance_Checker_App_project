@@ -1,9 +1,6 @@
-// HomeFragment.kt
 package kh.edu.rupp.fe.dse.attendencechecker.fragment
-
-import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +19,7 @@ import java.util.*
 class HomeFragment : Fragment() {
 
     private lateinit var classRepository: ClassRepository
+    private lateinit var noUpcomingSessionTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +41,16 @@ class HomeFragment : Fragment() {
         val adapter = ClassListAdapter(emptyList())
         recyclerView.adapter = adapter
 
-        fetchClassList(adapter)
+        noUpcomingSessionTextView = view.findViewById(R.id.no_upcoming_session_text_view)
+
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+        val classcode = sharedPreferences.getString("classcode", null)
+
+        if (classcode != null) {
+            fetchClassList(classcode, adapter)
+        } else {
+            displayNoUpcomingSessionMessage()
+        }
 
         val viewAttendanceCard = view.findViewById<CardView>(R.id.viewAttendanceCard)
         viewAttendanceCard.setOnClickListener {
@@ -52,18 +59,34 @@ class HomeFragment : Fragment() {
 
         // Set current date
         val dateTextView: TextView = view.findViewById(R.id.dateTextView)
-        val currentDate = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.getDefault()).format(Date())
+        val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
         dateTextView.text = currentDate
+
+        // Set current time in Bangkok timezone
+        val timeTextView: TextView = view.findViewById(R.id.timeTextView)
+        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val timeZone = TimeZone.getTimeZone("Asia/Bangkok")
+        sdf.timeZone = timeZone
+        val currentTime = sdf.format(Date())
+        timeTextView.text = currentTime
     }
 
-    private fun fetchClassList(adapter: ClassListAdapter) {
-        classRepository.getSessionList { sessionList ->
-            sessionList?.let {
-                Log.d(TAG, "Session list retrieved successfully: $it")
-                adapter.updateSessionList(it)
+    private fun fetchClassList(classcode: String, adapter: ClassListAdapter) {
+        classRepository.getClassesByClassCode(classcode) { classList ->
+            classList?.let {
+                adapter.updateClassList(it)
+                if (it.isEmpty()) {
+                    displayNoUpcomingSessionMessage()
+                } else {
+                    noUpcomingSessionTextView.visibility = View.GONE
+                }
             } ?: run {
-                Log.e(TAG, "Session list is null")
+                displayNoUpcomingSessionMessage()
             }
         }
+    }
+
+    private fun displayNoUpcomingSessionMessage() {
+        noUpcomingSessionTextView.visibility = View.VISIBLE
     }
 }

@@ -19,6 +19,35 @@ data class AttendanceRequest(
     val timestamp: String = getCurrentTimestamp() // Include the timestamp if needed
 )
 
+data class User(
+    val id: Int,
+    val name: String,
+    val email: String,
+    @SerializedName("access_token")
+    val accessToken: String,
+
+)
+
+data class UserResponse(
+    val user_id: Int,
+    val email: String,
+    val user_name: String,
+    val dob: String,
+    val department: String,
+    val class_code: String
+)
+
+data class SessionInfo(
+    val session_date: String,
+    val session_start_time: String,
+    val session_end_time: String,
+    val session_name: String,
+    val class_code: String,
+    val session_id: String
+)
+
+
+
 // Function to get the current timestamp in ISO 8601 format
 fun getCurrentTimestamp(): String {
     val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())

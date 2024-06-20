@@ -1,47 +1,29 @@
 package kh.edu.rupp.fe.dse.attendencechecker.fragment
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import kh.edu.rupp.fe.dse.attendencechecker.LoginActivity
 import kh.edu.rupp.fe.dse.attendencechecker.R
-
 class ProfileFragment : Fragment() {
 
     private lateinit var profileName: EditText
     private lateinit var profileDob: EditText
-    private lateinit var editProfileButton: Button
     private lateinit var logOutButton: Button
+    private lateinit var sharedPreferences: SharedPreferences
 
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var departmentTextView: TextView
+    private lateinit var classCodeTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,39 +33,36 @@ class ProfileFragment : Fragment() {
 
         profileName = view.findViewById(R.id.profile_name)
         profileDob = view.findViewById(R.id.profile_dob)
-        editProfileButton = view.findViewById(R.id.btn_edit_profile)
         logOutButton = view.findViewById(R.id.btn_log_out)
+        departmentTextView = view.findViewById(R.id.student_department)
+        classCodeTextView = view.findViewById(R.id.class_code)
 
-        editProfileButton.setOnClickListener {
-            toggleEditing()
-        }
+        // Initialize SharedPreferences
+        sharedPreferences = requireContext().getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
 
         logOutButton.setOnClickListener {
             showLogOutConfirmationDialog()
         }
 
+        fetchUserProfileFromPreferences()
+
         return view
     }
 
-    private fun toggleEditing() {
-        val isEditing = profileName.isEnabled
+    private fun fetchUserProfileFromPreferences() {
+        val userName = sharedPreferences.getString("user_name", "")
+        val dob = sharedPreferences.getString("dob", "")
+        val department = sharedPreferences.getString("Department", "")
+        val classCode = sharedPreferences.getString("classcode", "")
 
-        profileName.isEnabled = !isEditing
-        profileDob.isEnabled = !isEditing
+        updateUI(userName, dob, department, classCode)
+    }
 
-        if (isEditing) {
-            // Save changes
-            val newName = profileName.text.toString()
-            val newDob = profileDob.text.toString()
-
-            // Ideally, save these values to your data source
-            Toast.makeText(context, "Profile updated", Toast.LENGTH_SHORT).show()
-            editProfileButton.text = "Edit Profile"
-        } else {
-            // Enable editing
-            Toast.makeText(context, "You can now edit your profile", Toast.LENGTH_SHORT).show()
-            editProfileButton.text = "Save Changes"
-        }
+    private fun updateUI(userName: String?, dob: String?, department: String?, classCode: String?) {
+        profileName.setText(userName)
+        profileDob.setText(dob)
+        departmentTextView.text = department
+        classCodeTextView.text = classCode
     }
 
     private fun showLogOutConfirmationDialog() {
@@ -92,12 +71,27 @@ class ProfileFragment : Fragment() {
         builder.setMessage("Are you sure you want to log out?")
         builder.setPositiveButton("Yes") { dialog, _ ->
             dialog.dismiss()
-            // Implement log out functionality here
-            Toast.makeText(context, "Logged out", Toast.LENGTH_SHORT).show()
+            logOut()
         }
         builder.setNegativeButton("No") { dialog, _ ->
             dialog.dismiss()
         }
         builder.create().show()
+    }
+
+    private fun logOut() {
+        // Clear relevant SharedPreferences entries on logout
+        sharedPreferences.edit().clear().apply()
+
+        // Navigate to login screen
+        navigateToLogin()
+
+        Toast.makeText(context, "Logged out", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(context, LoginActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 }
